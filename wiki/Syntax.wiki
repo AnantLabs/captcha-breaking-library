@@ -1,3 +1,4 @@
+#labels Featured,Phase-Implementation
 =_Image_ Section=
 These are the functions that are placed between the {{{DEFINEPRECONDITIONS}}} and {{{ENDPRECONDITIONS}}} commands. They are run for each image in the set to precondition the image before trying to segment out individual letters.
 

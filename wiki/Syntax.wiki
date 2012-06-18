@@ -2,144 +2,332 @@
 =_Image_ Section=
 These are the functions that are placed between the {{{DEFINEPRECONDITIONS}}} and {{{ENDPRECONDITIONS}}} commands. They are run for each image in the set to precondition the image before trying to segment out individual letters.
 
-=={{{BILATERALSMOOTH}}}==
-*Description:* Performs a bilateral smoothing (edge preserving smoothing) and noise reduction filter on an image. 
- # {{{BILATERALSMOOTH}}}
-  * Perfrom an edge preserving smoothing algorithm.
-=={{{BINARIZE}}}==
-*Description:* Convert the image to black and white, where anything above a certain threshold is turned white. 
- # {{{BINARIZE, Threshold}}}
-  * Convert the image to black and white, where anything above a given threshold is turned white.
-  * _Threshold_ = A threshold value between 0 and 255 that determines what colors turn black and which turn white.
-=={{{BLACKANDWHITE}}}==
-*Description:* Convert the image to black and white, where anything not white turns black (even the color #FEFEFE). If you need to choose the threshold yourself, then see BINARIZE. 
- # {{{BLACKANDWHITE}}}
-  * Flatten an image to black and white.
-=={{{COLORFILLBLOBS}}}==
-*Description:* Fill each unique blob in an image with a random color. A group of adjacent pixels is considered a single blob when they are all similar to each other in the L`*`a`*`b`*` color space below a given threshold. In the L`*`a`*`b`*` color space, a threshold of 2.3 is considered to be a change "just noticible to the human eye." 
- # {{{COLORFILLBLOBS}}}
-  * Fill all blobs within a 1.0 distance in the L`*`a`*`b`*` colorspace with a random color.
- # {{{COLORFILLBLOBS, ColorTolerance, BackgroundTolerance}}}
-  * Fill all blobs within a given distance in the L`*`a`*`b`*` colorspace with a random color.
-  * _ColorTolerance_ = The maximum Delta E difference between two (L`*`a`*`b`*`) colors to allow when filling a blob. I.E., the colors have to be at most this close together to be considered to be in the same blob.
-  * _BackgroundTolerance_ = The maximum Delta E difference between a pixel (L`*`a`*`b`*`) and the background to allow when filling.
-=={{{CONVOLUTE}}}==
-*Description:* Perform a convolutional filter on the image. 
- # {{{CONVOLUTE, A1, A2, A3, B1, B2, B3, C1, C2, C3}}}
-  * Perform a convolutional filter on the image with a 3x3 kernel.
-  * _A1_ = The upper-left value of the 3x3 kernel.
-  * _A2_ = The upper-middle value of the 3x3 kernel.
-  * _A3_ = The upper-right value of the 3x3 kernel.
-  * _B1_ = The middle-left value of the 3x3 kernel.
-  * _B2_ = The center value of the 3x3 kernel.
-  * _B3_ = The middle-right value of the 3x3 kernel.
-  * _C1_ = The lower-left value of the 3x3 kernel.
-  * _C2_ = The lower-middle value of the 3x3 kernel.
-  * _C3_ = The lower-right value of the 3x3 kernel.
-=={{{CROP}}}==
-*Description:* Crop the image. 
- # {{{CROP, X, Y, Width, Height}}}
-  * Crop the image to a given rectangle.
-  * _X_ = The left side of the rectangle.
-  * _Y_ = The top of the rectangle.
-  * _Width_ = The width of the rectangle.
-  * _Height_ = The height of the rectangle.
-=={{{ERODE}}}==
-*Description:* Erodes the edges of blobs within an image. 
- # {{{ERODE}}}
-  * Erode the edges of all blobs, where a blob is defined as any pixel grouping completely surrounded by White.
- # {{{ERODE, BackgroundColor}}}
-  * Erode the edges of all blobs, where a blob is defined as any pixel grouping completely surrounded by a given color.
-  * _BackgroundColor_ = The color of the background that surrounds the individual blobs in the image.
-=={{{FILLWHITE}}}==
-*Description:* Fill a color into a region of an image. 
- # {{{FILLWHITE, X, Y}}}
-  * Fill the background color into a region of an image.
-  * _X_ = The X location of the region to start filling from.
-  * _Y_ = The Y location of the region to start filling from.
-=={{{GROW}}}==
-*Description:* Grow the size of all blobs in the image by one pixel. 
- # {{{GROW}}}
-  * Grow the edges of all blobs, where a blob is defined as any pixel grouping completely surrounded by White.
- # {{{GROW, BackgroundColor}}}
-  * Grow the edges of all blobs, where a blob is defined as any pixel grouping completely surrounded by a given color.
-  * _BackgroundColor_ = The color of the background that surrounds the individual blobs in the image.
-=={{{HISTOGRAMROTATE}}}==
-*Description:* Rotate an image using trial and error until a best angle is found (measured by a vertical histogram).  Use this when an image has slanted letters and you want them to be right side up. 
- # {{{HISTOGRAMROTATE}}}
-  * Rotate an image using trial and error until a best angle is found (measured by a vertical histogram). 
- # {{{HISTOGRAMROTATE, TRUE}}}
-  * Rotate an image using trial and error until a best angle is found (measured by a vertical histogram). 
-  * _TRUE_ = Pass any value here and the function will overlay the resulting image with a completely useless (albeit cool to look at) histogram graph.
-=={{{INVERT}}}==
-*Description:* Invert the colors in the image. 
- # {{{INVERT}}}
-  * Invert the colors in the image.
-=={{{KEEPONLYMAINCOLOR}}}==
-*Description:* Finds the color that occurrs most often in the image and removes all other colors that are not the most common color.  This is great if the main CAPTCHA text is all one color and that text always represents the most common color in the image (in which case this function single-handedly segments the letters from the background). 
- # {{{KEEPONLYMAINCOLOR, Threshold}}}
-  * Find the color that occurrs most often in the image within a certain threshold and remove all other colors that are not withing a given threshold from that color.
-  * _Threshold_ = The threshold value which determines how close a color has to be to be kept.
-=={{{MEANSHIFT}}}==
-*Description:* Apply a mean shift filter to the image. This will effectively flatten out color groups within a certain tolerance. 
- # {{{MEANSHIFT}}}
-  * Apply a 1 iteration mean shift filter with a radius of 1 and a tolerance of 1.
- # {{{MEANSHIFT, Iterations, Radius, Tolerance}}}
-  * Apply a mean shift filter a given number of times with a given radius and a given tolerance.
-  * _Iterations_ = The number of times to repeat the filter on the image.
-  * _Radius_ = The radius of the filter.
-  * _Tolerance_ = The tolerance that determines how close in color pixels have to be if they are to be considered in the same group.
-=={{{MEDIAN}}}==
-*Description:* Perform a convolutional median filter on the image. 
- # {{{MEDIAN}}}
-  * Perform a convolutional median filter on the image one time.
- # {{{MEDIAN, NumTimes}}}
-  * Perform a convolutional median filter on the image several times.
-  * _NumTimes_ = The number of times to apply the Median filter to the image.
-=={{{OUTLINE}}}==
-*Description:* Performs a convolutional filter on the image that outlines edges. 
- # {{{OUTLINE}}}
-  * Outline all edges in the image using a convolutional filter.
-=={{{REMOVENONCOLOR}}}==
-*Description:* White out all pixels that are not a color (any shade of grey). (Useful when a CAPTCHA only colors the letters and not the background.) 
- # {{{REMOVENONCOLOR}}}
-  * Remove all grayscale colors from the image leaving only colors.
- # {{{REMOVENONCOLOR, Distance}}}
-  * Remove all colors withing a certain threshold of a shade of gray from the image leaving only colors.
-  * _Distance_ = The threshold value which determines how close a color has to be to gray to be removed.
-=={{{REMOVESMALLBLOBS}}}==
-*Description:* Remove blobs (by filling them with the background color) from an image that are too small. 
- # {{{REMOVESMALLBLOBS, MinPixelCount, MinWidth, MinHeight}}}
-  * Remove blobs from an image that are too small by either pixel count or X and Y dimensions.
-  * _MinPixelCount_ = The smallest number of pixels a blob can be made of.
-  * _MinWidth_ = The smallest width a blob can be.
-  * _MinHeight_ = The smallest height a blob can be.
- # {{{REMOVESMALLBLOBS, MinPixelCount, MinWidth, MinHeight, ColorTolerance}}}
-  * Fill all blobs within a given distance in the L`*`a`*`b`*` colorspace with a random color.
-  * _MinPixelCount_ = The smallest number of pixels a blob can be made of.
-  * _MinWidth_ = The smallest width a blob can be.
-  * _MinHeight_ = The smallest height a blob can be.
-  * _ColorTolerance_ = The RGB tolerance in color when flood filling
-=={{{RESIZE}}}==
-*Description:* Resize the image to a specified width and height. 
- # {{{RESIZE, Width, Height}}}
-  * Resize each image to a specified width and height.
-  * _Width_ = The width to resize image to.
-  * _Height_ = The height to resize image to.
-=={{{SAVESAMPLE}}}==
-*Description:* Save a sample of the working image for debugging purposes. This is helpful when writing a script, as you can see every step along the way if you wish. 
- # {{{SAVESAMPLE, FileLocation}}}
-  * Save a sample of the working image.
-  * _FileLocation_ = The name and location of where to save the image to.
-=={{{SUBTRACT}}}==
-*Description:* Perform a pixel-by-pixel subtraction of a given image from the working image and set each pixel value as the difference between the two. 
- # {{{SUBTRACT, ImageLocation}}}
-  * Subtract one image from another.
-  * _ImageLocation_ = The absolute or relative location to the image to subtract from the working image.
-=={{{WAIT}}}==
-*Description:* Wait for a key press from the user to continue. 
- # {{{WAIT}}}
-  * Wait for a key press from the user to continue.
+----
+==BILATERALSMOOTH==
+Performs a bilateral smoothing (edge preserving smoothing) and noise reduction filter on an image. 
+*<code language="cobol">BILATERALSMOOTH</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Perfrom an edge preserving smoothing algorithm._</td></tr>
+</table>
 
 ----
-Generated by SKOTDOC on Sunday, June 17, 2012 at 9:41:06 PM
+==BINARIZE==
+Convert the image to black and white, where anything above a certain threshold is turned white. 
+*<code language="cobol">BINARIZE, Threshold</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Convert the image to black and white, where anything above a given threshold is turned white._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{Threshold}}} || A threshold value between 0 and 255 that determines what colors turn black and which turn white. ||
+</td></tr></table>
+
+----
+==BLACKANDWHITE==
+Convert the image to black and white, where anything not white turns black (even the color #FEFEFE). If you need to choose the threshold yourself, then see BINARIZE. 
+*<code language="cobol">BLACKANDWHITE</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Flatten an image to black and white._</td></tr>
+</table>
+
+----
+==COLORFILLBLOBS==
+Fill each unique blob in an image with a random color. A group of adjacent pixels is considered a single blob when they are all similar to each other in the L`*`a`*`b`*` color space below a given threshold. In the L`*`a`*`b`*` color space, a threshold of 2.3 is considered to be a change "just noticible to the human eye." 
+*<code language="cobol">COLORFILLBLOBS</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Fill all blobs within a 1.0 distance in the L`*`a`*`b`*` colorspace with a random color._</td></tr>
+</table>
+
+*<code language="cobol">COLORFILLBLOBS, ColorTolerance, BackgroundTolerance</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Fill all blobs within a given distance in the L`*`a`*`b`*` colorspace with a random color._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{ColorTolerance}}} || The maximum Delta E difference between two (L`*`a`*`b`*`) colors to allow when filling a blob. I.E., the colors have to be at most this close together to be considered to be in the same blob. ||
+|| {{{BackgroundTolerance}}} || The maximum Delta E difference between a pixel (L`*`a`*`b`*`) and the background to allow when filling. ||
+</td></tr></table>
+
+----
+==CONVOLUTE==
+Perform a convolutional filter on the image. 
+*<code language="cobol">CONVOLUTE, A1, A2, A3, B1, B2, B3, C1, C2, C3</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Perform a convolutional filter on the image with a 3x3 kernel._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{A1}}} || The upper-left value of the 3x3 kernel. ||
+|| {{{A2}}} || The upper-middle value of the 3x3 kernel. ||
+|| {{{A3}}} || The upper-right value of the 3x3 kernel. ||
+|| {{{B1}}} || The middle-left value of the 3x3 kernel. ||
+|| {{{B2}}} || The center value of the 3x3 kernel. ||
+|| {{{B3}}} || The middle-right value of the 3x3 kernel. ||
+|| {{{C1}}} || The lower-left value of the 3x3 kernel. ||
+|| {{{C2}}} || The lower-middle value of the 3x3 kernel. ||
+|| {{{C3}}} || The lower-right value of the 3x3 kernel. ||
+</td></tr></table>
+
+----
+==CROP==
+Crop the image. 
+*<code language="cobol">CROP, X, Y, Width, Height</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Crop the image to a given rectangle._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{X}}} || The left side of the rectangle. ||
+|| {{{Y}}} || The top of the rectangle. ||
+|| {{{Width}}} || The width of the rectangle. ||
+|| {{{Height}}} || The height of the rectangle. ||
+</td></tr></table>
+
+----
+==ERODE==
+Erodes the edges of blobs within an image. 
+*<code language="cobol">ERODE</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Erode the edges of all blobs, where a blob is defined as any pixel grouping completely surrounded by White._</td></tr>
+</table>
+
+*<code language="cobol">ERODE, BackgroundColor</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Erode the edges of all blobs, where a blob is defined as any pixel grouping completely surrounded by a given color._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{BackgroundColor}}} || The color of the background that surrounds the individual blobs in the image. ||
+</td></tr></table>
+
+----
+==FILLWHITE==
+Fill a color into a region of an image. 
+*<code language="cobol">FILLWHITE, X, Y</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Fill the background color into a region of an image._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{X}}} || The X location of the region to start filling from. ||
+|| {{{Y}}} || The Y location of the region to start filling from. ||
+</td></tr></table>
+
+----
+==GROW==
+Grow the size of all blobs in the image by one pixel. 
+*<code language="cobol">GROW</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Grow the edges of all blobs, where a blob is defined as any pixel grouping completely surrounded by White._</td></tr>
+</table>
+
+*<code language="cobol">GROW, BackgroundColor</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Grow the edges of all blobs, where a blob is defined as any pixel grouping completely surrounded by a given color._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{BackgroundColor}}} || The color of the background that surrounds the individual blobs in the image. ||
+</td></tr></table>
+
+----
+==HISTOGRAMROTATE==
+Rotate an image using trial and error until a best angle is found (measured by a vertical histogram).  Use this when an image has slanted letters and you want them to be right side up. 
+*<code language="cobol">HISTOGRAMROTATE</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Rotate an image using trial and error until a best angle is found (measured by a vertical histogram). _</td></tr>
+</table>
+
+*<code language="cobol">HISTOGRAMROTATE, TRUE</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Rotate an image using trial and error until a best angle is found (measured by a vertical histogram). _</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{TRUE}}} || Pass any value here and the function will overlay the resulting image with a completely useless (albeit cool to look at) histogram graph. ||
+</td></tr></table>
+
+----
+==INVERT==
+Invert the colors in the image. 
+*<code language="cobol">INVERT</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Invert the colors in the image._</td></tr>
+</table>
+
+----
+==KEEPONLYMAINCOLOR==
+Finds the color that occurrs most often in the image and removes all other colors that are not the most common color.  This is great if the main CAPTCHA text is all one color and that text always represents the most common color in the image (in which case this function single-handedly segments the letters from the background). 
+*<code language="cobol">KEEPONLYMAINCOLOR, Threshold</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Find the color that occurrs most often in the image within a certain threshold and remove all other colors that are not withing a given threshold from that color._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{Threshold}}} || The threshold value which determines how close a color has to be to be kept. ||
+</td></tr></table>
+
+----
+==MEANSHIFT==
+Apply a mean shift filter to the image. This will effectively flatten out color groups within a certain tolerance. 
+*<code language="cobol">MEANSHIFT</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Apply a 1 iteration mean shift filter with a radius of 1 and a tolerance of 1._</td></tr>
+</table>
+
+*<code language="cobol">MEANSHIFT, Iterations, Radius, Tolerance</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Apply a mean shift filter a given number of times with a given radius and a given tolerance._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{Iterations}}} || The number of times to repeat the filter on the image. ||
+|| {{{Radius}}} || The radius of the filter. ||
+|| {{{Tolerance}}} || The tolerance that determines how close in color pixels have to be if they are to be considered in the same group. ||
+</td></tr></table>
+
+----
+==MEDIAN==
+Perform a convolutional median filter on the image. 
+*<code language="cobol">MEDIAN</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Perform a convolutional median filter on the image one time._</td></tr>
+</table>
+
+*<code language="cobol">MEDIAN, NumTimes</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Perform a convolutional median filter on the image several times._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{NumTimes}}} || The number of times to apply the Median filter to the image. ||
+</td></tr></table>
+
+----
+==OUTLINE==
+Performs a convolutional filter on the image that outlines edges. 
+*<code language="cobol">OUTLINE</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Outline all edges in the image using a convolutional filter._</td></tr>
+</table>
+
+----
+==REMOVENONCOLOR==
+White out all pixels that are not a color (any shade of grey). (Useful when a CAPTCHA only colors the letters and not the background.) 
+*<code language="cobol">REMOVENONCOLOR</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Remove all grayscale colors from the image leaving only colors._</td></tr>
+</table>
+
+*<code language="cobol">REMOVENONCOLOR, Distance</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Remove all colors withing a certain threshold of a shade of gray from the image leaving only colors._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{Distance}}} || The threshold value which determines how close a color has to be to gray to be removed. ||
+</td></tr></table>
+
+----
+==REMOVESMALLBLOBS==
+Remove blobs (by filling them with the background color) from an image that are too small. 
+*<code language="cobol">REMOVESMALLBLOBS, MinPixelCount, MinWidth, MinHeight</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Remove blobs from an image that are too small by either pixel count or X and Y dimensions._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{MinPixelCount}}} || The smallest number of pixels a blob can be made of. ||
+|| {{{MinWidth}}} || The smallest width a blob can be. ||
+|| {{{MinHeight}}} || The smallest height a blob can be. ||
+</td></tr></table>
+
+*<code language="cobol">REMOVESMALLBLOBS, MinPixelCount, MinWidth, MinHeight, ColorTolerance</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Fill all blobs within a given distance in the L`*`a`*`b`*` colorspace with a random color._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{MinPixelCount}}} || The smallest number of pixels a blob can be made of. ||
+|| {{{MinWidth}}} || The smallest width a blob can be. ||
+|| {{{MinHeight}}} || The smallest height a blob can be. ||
+|| {{{ColorTolerance}}} || The RGB tolerance in color when flood filling ||
+</td></tr></table>
+
+----
+==RESIZE==
+Resize the image to a specified width and height. 
+*<code language="cobol">RESIZE, Width, Height</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Resize each image to a specified width and height._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{Width}}} || The width to resize image to. ||
+|| {{{Height}}} || The height to resize image to. ||
+</td></tr></table>
+
+----
+==SAVESAMPLE==
+Save a sample of the working image for debugging purposes. This is helpful when writing a script, as you can see every step along the way if you wish. 
+*<code language="cobol">SAVESAMPLE, FileLocation</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Save a sample of the working image._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{FileLocation}}} || The name and location of where to save the image to. ||
+</td></tr></table>
+
+----
+==SUBTRACT==
+Perform a pixel-by-pixel subtraction of a given image from the working image and set each pixel value as the difference between the two. 
+*<code language="cobol">SUBTRACT, ImageLocation</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Subtract one image from another._</td></tr>
+
+<tr><td colspan="2">*Parameters*</td></tr>
+<tr><td><pre>   </pre></td><td>
+|| {{{ImageLocation}}} || The absolute or relative location to the image to subtract from the working image. ||
+</td></tr></table>
+
+----
+==WAIT==
+Wait for a key press from the user to continue. 
+*<code language="cobol">WAIT</code>*
+
+<table><tr><td colspan="2">*Description*</td></tr>
+<tr><td><pre>   </pre></td><td>_Wait for a key press from the user to continue._</td></tr>
+</table>
+
+
+----
+Generated by SKOTDOC on Monday, June 18, 2012 at 5:54:37 PM

@@ -1,13 +1,60 @@
 #labels Featured,Phase-Implementation
+
 =CBL Syntax Documentation= 
 
 Here is the basic documentation for each CBL (CAPTCHA Breaking Language) command currently available within the scripting language (there is more you can access when using the .NET library directly). 
 
 The plan is to have a programming guide complete with examples and a program structure guide in the near future, but that is dependent on outside forces at the moment. 
 
-[Syntax#DEFINEPRECONDITIONS DEFINEPRECONDITIONS]
 
-<wiki:toc max_depth="2" />
+
+
+<table><tr><td colspan="2"><font size="4">*Setup_*</font></td><td>*These are the functions that are placed towards the top of CBL scripts. They set up the methods that will be used to segment and untimately solve the CAPTCHA images.*_</td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#ENDPRECONDITIONS ENDPRECONDITIONS]</td><td>End the preconditioning loop block. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#SETMODE SETMODE]</td><td>Set the level of debugger output to the screen when the script is run in a console. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#SETUPSOLVER SETUPSOLVER]</td><td>Set up the solver which is responsible for determining what letter an individual picture represents. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#DEFINEPRECONDITIONS DEFINEPRECONDITIONS]</td><td>Start the preconditioning loop block ("loop" because it's run for each image being processed). </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#SETUPSEGMENTER SETUPSEGMENTER]</td><td>Set up the segmenter which is responsible for extracting individual letters from an image after preprocessing. </td></tr>
+</table>
+
+
+<table><tr><td colspan="2"><font size="4">*Preprocess_*</font></td><td>*These are the functions that are placed between the {{{DEFINEPRECONDITIONS}}} and {{{ENDPRECONDITIONS}}} commands. They are run for each image in the set to precondition the image before trying to segment out individual letters.*_</td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#RESIZE RESIZE]</td><td>Resize the image to a specified width and height. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#ERODE ERODE]</td><td>Erodes the edges of blobs within an image. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#GROW GROW]</td><td>Grow the size of all blobs in the image by one pixel. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#OUTLINE OUTLINE]</td><td>Performs a convolutional filter on the image that outlines edges. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#SUBTRACT SUBTRACT]</td><td>Perform a pixel-by-pixel subtraction of a given image from the working image and set each pixel value as the difference between the two. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#MEDIAN MEDIAN]</td><td>Perform a convolutional median filter on the image. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#INVERT INVERT]</td><td>Invert the colors in the image. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#CROP CROP]</td><td>Crop the image. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#BILATERALSMOOTH BILATERALSMOOTH]</td><td>Performs a bilateral smoothing (edge preserving smoothing) and noise reduction filter on an image. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#COLORFILLBLOBS COLORFILLBLOBS]</td><td>Fill each unique blob in an image with a random color. A group of adjacent pixels is considered a single blob when they are all similar to each other in the L`*`a`*`b`*` color space below a given threshold. In the L`*`a`*`b`*` color space, a threshold of 2.3 is considered to be a change "just noticible to the human eye." </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#REMOVESMALLBLOBS REMOVESMALLBLOBS]</td><td>Remove blobs (by filling them with the background color) from an image that are too small. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#BLACKANDWHITE BLACKANDWHITE]</td><td>Convert the image to black and white, where anything not white turns black (even the color #FEFEFE). If you need to choose the threshold yourself, then see BINARIZE. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#BINARIZE BINARIZE]</td><td>Convert the image to black and white, where anything above a certain threshold is turned white. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#REMOVENONCOLOR REMOVENONCOLOR]</td><td>White out all pixels that are not a color (any shade of grey). (Useful when a CAPTCHA only colors the letters and not the background.) </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#KEEPONLYMAINCOLOR KEEPONLYMAINCOLOR]</td><td>Finds the color that occurrs most often in the image and removes all other colors that are not the most common color.  This is great if the main CAPTCHA text is all one color and that text always represents the most common color in the image (in which case this function single-handedly segments the letters from the background). </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#SAVESAMPLE SAVESAMPLE]</td><td>Save a sample of the working image for debugging purposes. This is helpful when writing a script, as you can see every step along the way if you wish. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#MEANSHIFT MEANSHIFT]</td><td>Apply a mean shift filter to the image. This will effectively flatten out color groups within a certain tolerance. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#FILLWHITE FILLWHITE]</td><td>Fill a color into a region of an image. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#CONVOLUTE CONVOLUTE]</td><td>Perform a convolutional filter on the image. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#HISTOGRAMROTATE HISTOGRAMROTATE]</td><td>Rotate an image using trial and error until a best angle is found (measured by a vertical histogram).  Use this when an image has slanted letters and you want them to be right side up. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#WAIT WAIT]</td><td>Wait for a key press from the user to continue. </td></tr>
+</table>
+
+
+<table><tr><td colspan="2"><font size="4">*Working_*</font></td><td>*These are the functions that are used towards the end of CBL scripts. Most of the functions in this group are used temporarily while developing, testing, or measuring the effectiveness of the script.*_</td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#TESTSEGMENT TESTSEGMENT]</td><td>Test the preprocessing and segmentation setup on a test image and save the segmented parts to a folder. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#TRAIN TRAIN]</td><td>Train the solver on the patterns acquired or loaded. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#TEST TEST]</td><td>Test the solver's ability to produce correct predictions on the patterns acquired or loaded. (Use patterns that were not used in training or you will get skewed results.) </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#FULLTEST FULLTEST]</td><td>Perform a full test (completely solving a CAPTCHA) and give the actual percentage of CAPTCHAs that were completely and correctly solved. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#SOLVE SOLVE]</td><td>Solve a given image using the logic developed and trained for in the CBL script and output the solution. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#SAVE SAVE]</td><td>Save the DataBase of trained patterns to a file so that it can be loaded later. The idea is to distribute the database file with your finished script (the finished script shouldn't do any training, only efficient solving). </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#LOAD LOAD]</td><td>Load a pattern database. The database you load needs to have been saved under the same setup conditions as the script is being loaded under. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#SAY SAY]</td><td>Print out a line of debug text to the console. </td></tr>
+<tr><td width="25"> </td><td width="200px">[Syntax#WAIT WAIT]</td><td>Wait for the user to press a key. </td></tr>
+</table>
+
 
 ----
 =_Setup_ Section=
@@ -41,7 +88,7 @@ Set the level of debugger output to the screen when the script is run in a conso
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{WARN}}}_ || *Literal Value* - Only output error or warning messages. ||
+|| _{{{WARN}}}_ || _Literal Value_ || Only output error or warning messages. ||
 </td></tr></table>
 
 *<code language="cobol">SETMODE, QUIET</code>*
@@ -51,7 +98,7 @@ Set the level of debugger output to the screen when the script is run in a conso
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{QUIET}}}_ || *Literal Value* - Do not print any information to the screen unless something fatal happened. ||
+|| _{{{QUIET}}}_ || _Literal Value_ || Do not print any information to the screen unless something fatal happened. ||
 </td></tr></table>
 
 *<code language="cobol">SETMODE, ALL</code>*
@@ -61,7 +108,7 @@ Set the level of debugger output to the screen when the script is run in a conso
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{ALL}}}_ || *Literal Value* - Output all messages including errors, warnings, and normal informational messages.  ||
+|| _{{{ALL}}}_ || _Literal Value_ || Output all messages including errors, warnings, and normal informational messages.  ||
 </td></tr></table>
 
 ----
@@ -74,9 +121,9 @@ Set up the segmenter which is responsible for extracting individual letters from
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{BLOB}}}_ || *Literal Value* - Use the blob segmenter to extract individual symbols. ||
-|| {{{MinWidth}}} || The minimum width a blob must be to be considered a blob worthy of extraction. ||
-|| {{{MinHeight}}} || The minimum height a blob must be to be considered a blob worthy of extraction. ||
+|| _{{{BLOB}}}_ || _Literal Value_ || Use the blob segmenter to extract individual symbols. ||
+|| {{{MinWidth}}} || Whole Number || The minimum width a blob must be to be considered a blob worthy of extraction. ||
+|| {{{MinHeight}}} || Whole Number || The minimum height a blob must be to be considered a blob worthy of extraction. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSEGMENTER, BLOB, MinWidth, MinHeight, NumBlobs</code>*
@@ -86,10 +133,10 @@ Set up the segmenter which is responsible for extracting individual letters from
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{BLOB}}}_ || *Literal Value* - Use the blob segmenter to extract individual symbols. ||
-|| {{{MinWidth}}} || The minimum width a blob must be to be considered a blob worthy of extraction. ||
-|| {{{MinHeight}}} || The minimum height a blob must be to be considered a blob worthy of extraction. ||
-|| {{{NumBlobs}}} || The fixed number of blobs to extract from the image. If fewer than this number are found, then the largest blobs will be split up until there are this many blobs. If there are too many, then the smallest will be ignored. ||
+|| _{{{BLOB}}}_ || _Literal Value_ || Use the blob segmenter to extract individual symbols. ||
+|| {{{MinWidth}}} || Whole Number || The minimum width a blob must be to be considered a blob worthy of extraction. ||
+|| {{{MinHeight}}} || Whole Number || The minimum height a blob must be to be considered a blob worthy of extraction. ||
+|| {{{NumBlobs}}} || Whole Number || The fixed number of blobs to extract from the image. If fewer than this number are found, then the largest blobs will be split up until there are this many blobs. If there are too many, then the smallest will be ignored. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSEGMENTER, HIST, Tolerance</code>*
@@ -99,8 +146,8 @@ Set up the segmenter which is responsible for extracting individual letters from
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{HIST}}}_ || *Literal Value* - Use histograms to divide up the image. ||
-|| {{{Tolerance}}} || Any number of non-background pixels below this number (on any given vertical slice of the image) will be considered a valid split point. ||
+|| _{{{HIST}}}_ || _Literal Value_ || Use histograms to divide up the image. ||
+|| {{{Tolerance}}} || Whole Number || Any number of non-background pixels below this number (on any given vertical slice of the image) will be considered a valid split point. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSEGMENTER, HIST, Tolerance, NumberOfChars</code>*
@@ -110,9 +157,9 @@ Set up the segmenter which is responsible for extracting individual letters from
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{HIST}}}_ || *Literal Value* - Use histograms to divide up the image. ||
-|| {{{Tolerance}}} || Any number of non-background pixels below this number (on any given vertical slice of the image) will be considered a valid split point. ||
-|| {{{NumberOfChars}}} || The number of characters you expect to have extracted from the image. If there are more than this, then the least likely matches will be discarded. If there are fewer than this, then the largest ones will be subdivided. ||
+|| _{{{HIST}}}_ || _Literal Value_ || Use histograms to divide up the image. ||
+|| {{{Tolerance}}} || Whole Number || Any number of non-background pixels below this number (on any given vertical slice of the image) will be considered a valid split point. ||
+|| {{{NumberOfChars}}} || Whole Number || The number of characters you expect to have extracted from the image. If there are more than this, then the least likely matches will be discarded. If there are fewer than this, then the largest ones will be subdivided. ||
 </td></tr></table>
 
 ----
@@ -125,10 +172,10 @@ Set up the solver which is responsible for determining what letter an individual
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{SNN}}}_ || *Literal Value* - Set up the solver to use a Simple Neural Network (fully connected with backpropagation error correction). ||
-|| {{{CharacterSet}}} || A string containing all possible characters that could be used in the CAPTCHA system. ||
-|| {{{Width}}} || The width that will be used for each input image. ||
-|| {{{Height}}} || The height that will be used for each input image. ||
+|| _{{{SNN}}}_ || _Literal Value_ || Set up the solver to use a Simple Neural Network (fully connected with backpropagation error correction). ||
+|| {{{CharacterSet}}} || Quoted String || A string containing all possible characters that could be used in the CAPTCHA system. ||
+|| {{{Width}}} || Whole Number || The width that will be used for each input image. ||
+|| {{{Height}}} || Whole Number || The height that will be used for each input image. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSOLVER, SNN, CharacterSet, Width, Height, Characters</code>*
@@ -138,11 +185,11 @@ Set up the solver which is responsible for determining what letter an individual
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{SNN}}}_ || *Literal Value* - Set up the solver to use a Simple Neural Network (fully connected with backpropagation error correction). ||
-|| {{{CharacterSet}}} || A string containing all possible characters that could be used in the CAPTCHA system. ||
-|| {{{Width}}} || The width that will be used for each input image. ||
-|| {{{Height}}} || The height that will be used for each input image. ||
-|| {{{Characters}}} || The fixed number of characters that are in every CAPTCHA for this system. If the number of characters varies, then use a different overload of this function. ||
+|| _{{{SNN}}}_ || _Literal Value_ || Set up the solver to use a Simple Neural Network (fully connected with backpropagation error correction). ||
+|| {{{CharacterSet}}} || Quoted String || A string containing all possible characters that could be used in the CAPTCHA system. ||
+|| {{{Width}}} || Whole Number || The width that will be used for each input image. ||
+|| {{{Height}}} || Whole Number || The height that will be used for each input image. ||
+|| {{{Characters}}} || Whole Number || The fixed number of characters that are in every CAPTCHA for this system. If the number of characters varies, then use a different overload of this function. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSOLVER, SNN, CharacterSet, Width, Height, HiddenNeurons, Characters</code>*
@@ -152,12 +199,12 @@ Set up the solver which is responsible for determining what letter an individual
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{SNN}}}_ || *Literal Value* - Set up the solver to use a Simple Neural Network (fully connected with backpropagation error correction). ||
-|| {{{CharacterSet}}} || A string containing all possible characters that could be used in the CAPTCHA system. ||
-|| {{{Width}}} || The width that will be used for each input image. ||
-|| {{{Height}}} || The height that will be used for each input image. ||
-|| {{{HiddenNeurons}}} || The number of neurons to put in the middle (hidden) layer of the neural network. ||
-|| {{{Characters}}} || The fixed number of characters that are in every CAPTCHA for this system. If the number of characters varies, then use a different overload of this function. ||
+|| _{{{SNN}}}_ || _Literal Value_ || Set up the solver to use a Simple Neural Network (fully connected with backpropagation error correction). ||
+|| {{{CharacterSet}}} || Quoted String || A string containing all possible characters that could be used in the CAPTCHA system. ||
+|| {{{Width}}} || Whole Number || The width that will be used for each input image. ||
+|| {{{Height}}} || Whole Number || The height that will be used for each input image. ||
+|| {{{HiddenNeurons}}} || Whole Number || The number of neurons to put in the middle (hidden) layer of the neural network. ||
+|| {{{Characters}}} || Whole Number || The fixed number of characters that are in every CAPTCHA for this system. If the number of characters varies, then use a different overload of this function. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSOLVER, SNN, CharacterSet, Width, Height, HiddenNeurons, Characters, LearnRate</code>*
@@ -167,13 +214,13 @@ Set up the solver which is responsible for determining what letter an individual
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{SNN}}}_ || *Literal Value* - Set up the solver to use a Simple Neural Network (fully connected with backpropagation error correction). ||
-|| {{{CharacterSet}}} || A string containing all possible characters that could be used in the CAPTCHA system. ||
-|| {{{Width}}} || The width that will be used for each input image. ||
-|| {{{Height}}} || The height that will be used for each input image. ||
-|| {{{HiddenNeurons}}} || The number of neurons to put in the middle (hidden) layer of the neural network. ||
-|| {{{Characters}}} || The fixed number of characters that are in every CAPTCHA for this system. If the number of characters varies, then use a different overload of this function. ||
-|| {{{LearnRate}}} || The learning rate of descent for training the neural network. The value should be between 0.0 and 1.0, however anything below 0.9 will descend way too quickly. ||
+|| _{{{SNN}}}_ || _Literal Value_ || Set up the solver to use a Simple Neural Network (fully connected with backpropagation error correction). ||
+|| {{{CharacterSet}}} || Quoted String || A string containing all possible characters that could be used in the CAPTCHA system. ||
+|| {{{Width}}} || Whole Number || The width that will be used for each input image. ||
+|| {{{Height}}} || Whole Number || The height that will be used for each input image. ||
+|| {{{HiddenNeurons}}} || Whole Number || The number of neurons to put in the middle (hidden) layer of the neural network. ||
+|| {{{Characters}}} || Whole Number || The fixed number of characters that are in every CAPTCHA for this system. If the number of characters varies, then use a different overload of this function. ||
+|| {{{LearnRate}}} || Decimal Value || The learning rate of descent for training the neural network. The value should be between 0.0 and 1.0, however anything below 0.9 will descend way too quickly. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSOLVER, MNN, CharacterSet, Width, Height</code>*
@@ -183,10 +230,10 @@ Set up the solver which is responsible for determining what letter an individual
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{MNN}}}_ || *Literal Value* - Set up the solver to use a set of neural networks (one per pattern instead of one for all patterns). ||
-|| {{{CharacterSet}}} || A string containing all possible characters that could be used in the CAPTCHA system. ||
-|| {{{Width}}} || The width that will be used for each input image. ||
-|| {{{Height}}} || The height that will be used for each input image. ||
+|| _{{{MNN}}}_ || _Literal Value_ || Set up the solver to use a set of neural networks (one per pattern instead of one for all patterns). ||
+|| {{{CharacterSet}}} || Quoted String || A string containing all possible characters that could be used in the CAPTCHA system. ||
+|| {{{Width}}} || Whole Number || The width that will be used for each input image. ||
+|| {{{Height}}} || Whole Number || The height that will be used for each input image. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSOLVER, MNN, CharacterSet, Width, Height, Characters</code>*
@@ -196,11 +243,11 @@ Set up the solver which is responsible for determining what letter an individual
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{MNN}}}_ || *Literal Value* - Set up the solver to use a set of neural networks (one per pattern instead of one for all patterns). ||
-|| {{{CharacterSet}}} || A string containing all possible characters that could be used in the CAPTCHA system. ||
-|| {{{Width}}} || The width that will be used for each input image. ||
-|| {{{Height}}} || The height that will be used for each input image. ||
-|| {{{Characters}}} || The fixed number of characters that are in every CAPTCHA for this system. If the number of characters varies, then use a different overload of this function. ||
+|| _{{{MNN}}}_ || _Literal Value_ || Set up the solver to use a set of neural networks (one per pattern instead of one for all patterns). ||
+|| {{{CharacterSet}}} || Quoted String || A string containing all possible characters that could be used in the CAPTCHA system. ||
+|| {{{Width}}} || Whole Number || The width that will be used for each input image. ||
+|| {{{Height}}} || Whole Number || The height that will be used for each input image. ||
+|| {{{Characters}}} || Whole Number || The fixed number of characters that are in every CAPTCHA for this system. If the number of characters varies, then use a different overload of this function. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSOLVER, MNN, CharacterSet, Width, Height, HiddenNeurons, Characters</code>*
@@ -210,12 +257,12 @@ Set up the solver which is responsible for determining what letter an individual
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{MNN}}}_ || *Literal Value* - Set up the solver to use a set of neural networks (one per pattern instead of one for all patterns). ||
-|| {{{CharacterSet}}} || A string containing all possible characters that could be used in the CAPTCHA system. ||
-|| {{{Width}}} || The width that will be used for each input image. ||
-|| {{{Height}}} || The height that will be used for each input image. ||
-|| {{{HiddenNeurons}}} || The number of neurons to put in the middle (hidden) layer of the neural network. ||
-|| {{{Characters}}} || The fixed number of characters that are in every CAPTCHA for this system. If the number of characters varies, then use a different overload of this function. ||
+|| _{{{MNN}}}_ || _Literal Value_ || Set up the solver to use a set of neural networks (one per pattern instead of one for all patterns). ||
+|| {{{CharacterSet}}} || Quoted String || A string containing all possible characters that could be used in the CAPTCHA system. ||
+|| {{{Width}}} || Whole Number || The width that will be used for each input image. ||
+|| {{{Height}}} || Whole Number || The height that will be used for each input image. ||
+|| {{{HiddenNeurons}}} || Whole Number || The number of neurons to put in the middle (hidden) layer of the neural network. ||
+|| {{{Characters}}} || Whole Number || The fixed number of characters that are in every CAPTCHA for this system. If the number of characters varies, then use a different overload of this function. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSOLVER, MNN, CharacterSet, Width, Height, HiddenNeurons, Characters, LearnRate</code>*
@@ -225,13 +272,13 @@ Set up the solver which is responsible for determining what letter an individual
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{MNN}}}_ || *Literal Value* - Set up the solver to use a set of neural networks (one per pattern instead of one for all patterns). ||
-|| {{{CharacterSet}}} || A string containing all possible characters that could be used in the CAPTCHA system. ||
-|| {{{Width}}} || The width that will be used for each input image. ||
-|| {{{Height}}} || The height that will be used for each input image. ||
-|| {{{HiddenNeurons}}} || The number of neurons to put in the middle (hidden) layer of the neural network. ||
-|| {{{Characters}}} || The fixed number of characters that are in every CAPTCHA for this system. If the number of characters varies, then use a different overload of this function. ||
-|| {{{LearnRate}}} || The learning rate of descent for training the neural network. The value should be between 0.0 and 1.0, however anything below 0.9 will descend way too quickly. ||
+|| _{{{MNN}}}_ || _Literal Value_ || Set up the solver to use a set of neural networks (one per pattern instead of one for all patterns). ||
+|| {{{CharacterSet}}} || Quoted String || A string containing all possible characters that could be used in the CAPTCHA system. ||
+|| {{{Width}}} || Whole Number || The width that will be used for each input image. ||
+|| {{{Height}}} || Whole Number || The height that will be used for each input image. ||
+|| {{{HiddenNeurons}}} || Whole Number || The number of neurons to put in the middle (hidden) layer of the neural network. ||
+|| {{{Characters}}} || Whole Number || The fixed number of characters that are in every CAPTCHA for this system. If the number of characters varies, then use a different overload of this function. ||
+|| {{{LearnRate}}} || Decimal Value || The learning rate of descent for training the neural network. The value should be between 0.0 and 1.0, however anything below 0.9 will descend way too quickly. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSOLVER, BVS, CharacterSet, Width, Height</code>*
@@ -241,10 +288,10 @@ Set up the solver which is responsible for determining what letter an individual
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{BVS}}}_ || *Literal Value* - Set up the solver to use bitmap vector subtraction (which matches patterns by finding the root-mean-square distance between two images). ||
-|| {{{CharacterSet}}} || A string containing all possible characters that could be used in the CAPTCHA system. ||
-|| {{{Width}}} || The width that will be used for each input image. ||
-|| {{{Height}}} || The height that will be used for each input image. ||
+|| _{{{BVS}}}_ || _Literal Value_ || Set up the solver to use bitmap vector subtraction (which matches patterns by finding the root-mean-square distance between two images). ||
+|| {{{CharacterSet}}} || Quoted String || A string containing all possible characters that could be used in the CAPTCHA system. ||
+|| {{{Width}}} || Whole Number || The width that will be used for each input image. ||
+|| {{{Height}}} || Whole Number || The height that will be used for each input image. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSOLVER, BVS, CharacterSet, Width, Height, MergePatterns</code>*
@@ -254,11 +301,11 @@ Set up the solver which is responsible for determining what letter an individual
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{BVS}}}_ || *Literal Value* - Set up the solver to use bitmap vector subtraction (which matches patterns by finding the root-mean-square distance between two images). ||
-|| {{{CharacterSet}}} || A string containing all possible characters that could be used in the CAPTCHA system. ||
-|| {{{Width}}} || The width that will be used for each input image. ||
-|| {{{Height}}} || The height that will be used for each input image. ||
-|| {{{MergePatterns}}} || Boolean value 'Y' or 'N' - Whether or not to group all patterns with the same solution. If you do not, then a separate pattern will be created for every input (not recommended usually) and it will take a lot of time and resources. ||
+|| _{{{BVS}}}_ || _Literal Value_ || Set up the solver to use bitmap vector subtraction (which matches patterns by finding the root-mean-square distance between two images). ||
+|| {{{CharacterSet}}} || Quoted String || A string containing all possible characters that could be used in the CAPTCHA system. ||
+|| {{{Width}}} || Whole Number || The width that will be used for each input image. ||
+|| {{{Height}}} || Whole Number || The height that will be used for each input image. ||
+|| {{{MergePatterns}}} || Boolean (Y/N) || Whether or not to group all patterns with the same solution. If you do not, then a separate pattern will be created for every input (not recommended usually) and it will take a lot of time and resources. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSOLVER, HS, CharacterSet, Width, Height</code>*
@@ -268,10 +315,10 @@ Set up the solver which is responsible for determining what letter an individual
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{HS}}}_ || *Literal Value* - Set up the solver to use a histogram solver that compares the histograms of patterns to samples. ||
-|| {{{CharacterSet}}} || A string containing all possible characters that could be used in the CAPTCHA system. ||
-|| {{{Width}}} || The width that will be used for each input image. ||
-|| {{{Height}}} || The height that will be used for each input image. ||
+|| _{{{HS}}}_ || _Literal Value_ || Set up the solver to use a histogram solver that compares the histograms of patterns to samples. ||
+|| {{{CharacterSet}}} || Quoted String || A string containing all possible characters that could be used in the CAPTCHA system. ||
+|| {{{Width}}} || Whole Number || The width that will be used for each input image. ||
+|| {{{Height}}} || Whole Number || The height that will be used for each input image. ||
 </td></tr></table>
 
 *<code language="cobol">SETUPSOLVER, CV, CharacterSet, Width, Height</code>*
@@ -281,10 +328,10 @@ Set up the solver which is responsible for determining what letter an individual
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{CV}}}_ || *Literal Value* - Set up the solver to use contour vector analysis. ||
-|| {{{CharacterSet}}} || A string containing all possible characters that could be used in the CAPTCHA system. ||
-|| {{{Width}}} || The width that will be used for each input image. ||
-|| {{{Height}}} || The height that will be used for each input image. ||
+|| _{{{CV}}}_ || _Literal Value_ || Set up the solver to use contour vector analysis. ||
+|| {{{CharacterSet}}} || Quoted String || A string containing all possible characters that could be used in the CAPTCHA system. ||
+|| {{{Width}}} || Whole Number || The width that will be used for each input image. ||
+|| {{{Height}}} || Whole Number || The height that will be used for each input image. ||
 </td></tr></table>
 
 
@@ -311,7 +358,7 @@ Convert the image to black and white, where anything above a certain threshold i
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Threshold}}} || A threshold value between 0 and 255 that determines what colors turn black and which turn white. ||
+|| {{{Threshold}}} || Whole Number || A threshold value between 0 and 255 that determines what colors turn black and which turn white. ||
 </td></tr></table>
 
 ----
@@ -339,8 +386,8 @@ Fill each unique blob in an image with a random color. A group of adjacent pixel
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{ColorTolerance}}} || The maximum Delta E difference between two (L`*`a`*`b`*`) colors to allow when filling a blob. I.E., the colors have to be at most this close together to be considered to be in the same blob. ||
-|| {{{BackgroundTolerance}}} || The maximum Delta E difference between a pixel (L`*`a`*`b`*`) and the background to allow when filling. ||
+|| {{{ColorTolerance}}} || Decimal Value || The maximum Delta E difference between two (L`*`a`*`b`*`) colors to allow when filling a blob. I.E., the colors have to be at most this close together to be considered to be in the same blob. ||
+|| {{{BackgroundTolerance}}} || Decimal Value || The maximum Delta E difference between a pixel (L`*`a`*`b`*`) and the background to allow when filling. ||
 </td></tr></table>
 
 ----
@@ -353,31 +400,30 @@ Perform a convolutional filter on the image.
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{A1}}} || The upper-left value of the 3x3 kernel. ||
-|| {{{A2}}} || The upper-middle value of the 3x3 kernel. ||
-|| {{{A3}}} || The upper-right value of the 3x3 kernel. ||
-|| {{{B1}}} || The middle-left value of the 3x3 kernel. ||
-|| {{{B2}}} || The center value of the 3x3 kernel. ||
-|| {{{B3}}} || The middle-right value of the 3x3 kernel. ||
-|| {{{C1}}} || The lower-left value of the 3x3 kernel. ||
-|| {{{C2}}} || The lower-middle value of the 3x3 kernel. ||
-|| {{{C3}}} || The lower-right value of the 3x3 kernel. ||
+|| {{{A1}}} || Whole Number || The upper-left value of the 3x3 kernel. ||
+|| {{{A2}}} || Whole Number || The upper-middle value of the 3x3 kernel. ||
+|| {{{A3}}} || Whole Number || The upper-right value of the 3x3 kernel. ||
+|| {{{B1}}} || Whole Number || The middle-left value of the 3x3 kernel. ||
+|| {{{B2}}} || Whole Number || The center value of the 3x3 kernel. ||
+|| {{{B3}}} || Whole Number || The middle-right value of the 3x3 kernel. ||
+|| {{{C1}}} || Whole Number || The lower-left value of the 3x3 kernel. ||
+|| {{{C2}}} || Whole Number || The lower-middle value of the 3x3 kernel. ||
+|| {{{C3}}} || Whole Number || The lower-right value of the 3x3 kernel. ||
 </td></tr></table>
 
 ----
 ==CROP==
 Crop the image. 
-*<code language="cobol">CROP, X, Y, Width, Height</code>*
+*<code language="cobol">CROP, X, Width, Height</code>*
 
 <table><tr><td colspan="2">*Description*</td></tr>
 <tr><td><pre>   </pre></td><td>_Crop the image to a given rectangle._</td></tr>
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{X}}} || The left side of the rectangle. ||
-|| {{{Y}}} || The top of the rectangle. ||
-|| {{{Width}}} || The width of the rectangle. ||
-|| {{{Height}}} || The height of the rectangle. ||
+|| {{{X}}} || Whole Number || The left side of the rectangle. ||
+|| {{{Width}}} || Whole Number || The width of the rectangle. ||
+|| {{{Height}}} || Whole Number || The height of the rectangle. ||
 </td></tr></table>
 
 ----
@@ -389,14 +435,14 @@ Erodes the edges of blobs within an image.
 <tr><td><pre>   </pre></td><td>_Erode the edges of all blobs, where a blob is defined as any pixel grouping completely surrounded by White._</td></tr>
 </table>
 
-*<code language="cobol">ERODE, BackgroundColor</code>*
+*<code language="cobol">ERODE, Times</code>*
 
 <table><tr><td colspan="2">*Description*</td></tr>
 <tr><td><pre>   </pre></td><td>_Erode the edges of all blobs, where a blob is defined as any pixel grouping completely surrounded by a given color._</td></tr>
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{BackgroundColor}}} || The color of the background that surrounds the individual blobs in the image. ||
+|| {{{Times}}} || Whole Number || Number of times to erode the edges. ||
 </td></tr></table>
 
 ----
@@ -409,8 +455,8 @@ Fill a color into a region of an image.
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{X}}} || The X location of the region to start filling from. ||
-|| {{{Y}}} || The Y location of the region to start filling from. ||
+|| {{{X}}} || Whole Number || The X location of the region to start filling from. ||
+|| {{{Y}}} || Whole Number || The Y location of the region to start filling from. ||
 </td></tr></table>
 
 ----
@@ -422,14 +468,14 @@ Grow the size of all blobs in the image by one pixel.
 <tr><td><pre>   </pre></td><td>_Grow the edges of all blobs, where a blob is defined as any pixel grouping completely surrounded by White._</td></tr>
 </table>
 
-*<code language="cobol">GROW, BackgroundColor</code>*
+*<code language="cobol">GROW, Times</code>*
 
 <table><tr><td colspan="2">*Description*</td></tr>
 <tr><td><pre>   </pre></td><td>_Grow the edges of all blobs, where a blob is defined as any pixel grouping completely surrounded by a given color._</td></tr>
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{BackgroundColor}}} || The color of the background that surrounds the individual blobs in the image. ||
+|| {{{Times}}} || Whole Number || Number of times to grow the edges. ||
 </td></tr></table>
 
 ----
@@ -448,7 +494,7 @@ Rotate an image using trial and error until a best angle is found (measured by a
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{TRUE}}}_ || *Literal Value* - Overlay the resulting image with a completely useless (albeit cool to look at) histogram graph. ||
+|| _{{{TRUE}}}_ || _Literal Value_ || Overlay the resulting image with a completely useless (albeit cool to look at) histogram graph. ||
 </td></tr></table>
 
 ----
@@ -470,7 +516,7 @@ Finds the color that occurrs most often in the image and removes all other color
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Threshold}}} || The threshold value which determines how close a color has to be to be kept. ||
+|| {{{Threshold}}} || Whole Number || The threshold value which determines how close a color has to be to be kept. ||
 </td></tr></table>
 
 ----
@@ -489,9 +535,9 @@ Apply a mean shift filter to the image. This will effectively flatten out color 
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Iterations}}} || The number of times to repeat the filter on the image. ||
-|| {{{Radius}}} || The radius of the filter. ||
-|| {{{Tolerance}}} || The tolerance that determines how close in color pixels have to be if they are to be considered in the same group. ||
+|| {{{Iterations}}} || Whole Number || The number of times to repeat the filter on the image. ||
+|| {{{Radius}}} || Whole Number || The radius of the filter. ||
+|| {{{Tolerance}}} || Decimal Value || The tolerance that determines how close in color pixels have to be if they are to be considered in the same group. ||
 </td></tr></table>
 
 ----
@@ -510,7 +556,7 @@ Perform a convolutional median filter on the image.
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{NumTimes}}} || The number of times to apply the Median filter to the image. ||
+|| {{{NumTimes}}} || Whole Number || The number of times to apply the Median filter to the image. ||
 </td></tr></table>
 
 ----
@@ -538,7 +584,7 @@ White out all pixels that are not a color (any shade of grey). (Useful when a CA
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Distance}}} || The threshold value which determines how close a color has to be to gray to be removed. ||
+|| {{{Distance}}} || Whole Number || The threshold value which determines how close a color has to be to gray to be removed. ||
 </td></tr></table>
 
 ----
@@ -551,9 +597,9 @@ Remove blobs (by filling them with the background color) from an image that are 
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{MinPixelCount}}} || The smallest number of pixels a blob can be made of. ||
-|| {{{MinWidth}}} || The smallest width a blob can be. ||
-|| {{{MinHeight}}} || The smallest height a blob can be. ||
+|| {{{MinPixelCount}}} || Whole Number || The smallest number of pixels a blob can be made of. ||
+|| {{{MinWidth}}} || Whole Number || The smallest width a blob can be. ||
+|| {{{MinHeight}}} || Whole Number || The smallest height a blob can be. ||
 </td></tr></table>
 
 *<code language="cobol">REMOVESMALLBLOBS, MinPixelCount, MinWidth, MinHeight, ColorTolerance</code>*
@@ -563,10 +609,10 @@ Remove blobs (by filling them with the background color) from an image that are 
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{MinPixelCount}}} || The smallest number of pixels a blob can be made of. ||
-|| {{{MinWidth}}} || The smallest width a blob can be. ||
-|| {{{MinHeight}}} || The smallest height a blob can be. ||
-|| {{{ColorTolerance}}} || The RGB tolerance in color when flood filling ||
+|| {{{MinPixelCount}}} || Whole Number || The smallest number of pixels a blob can be made of. ||
+|| {{{MinWidth}}} || Whole Number || The smallest width a blob can be. ||
+|| {{{MinHeight}}} || Whole Number || The smallest height a blob can be. ||
+|| {{{ColorTolerance}}} || Whole Number || The RGB tolerance in color when flood filling ||
 </td></tr></table>
 
 ----
@@ -579,8 +625,8 @@ Resize the image to a specified width and height.
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Width}}} || The width to resize image to. ||
-|| {{{Height}}} || The height to resize image to. ||
+|| {{{Width}}} || Whole Number || The width to resize image to. ||
+|| {{{Height}}} || Whole Number || The height to resize image to. ||
 </td></tr></table>
 
 ----
@@ -593,7 +639,7 @@ Save a sample of the working image for debugging purposes. This is helpful when 
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{FileLocation}}} || The name and location of where to save the image to. ||
+|| {{{FileLocation}}} || Quoted String || The name and location of where to save the image to. ||
 </td></tr></table>
 
 ----
@@ -606,7 +652,7 @@ Perform a pixel-by-pixel subtraction of a given image from the working image and
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{ImageLocation}}} || The absolute or relative location to the image to subtract from the working image. ||
+|| {{{ImageLocation}}} || Quoted String || The absolute or relative location to the image to subtract from the working image. ||
 </td></tr></table>
 
 ----
@@ -633,8 +679,8 @@ Perform a full test (completely solving a CAPTCHA) and give the actual percentag
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Folder}}} || The folder that contains a collection of sample CAPTCHA images for testing. The CAPTCHA images need to labeled (named) with the correct solution to CAPTCHA so that there is something to compare the predicted output to and get a percentage correct. ||
-|| {{{ReportFile}}} || The file to save the report to. ||
+|| {{{Folder}}} || Quoted String || The folder that contains a collection of sample CAPTCHA images for testing. The CAPTCHA images need to labeled (named) with the correct solution to CAPTCHA so that there is something to compare the predicted output to and get a percentage correct. ||
+|| {{{ReportFile}}} || Quoted String || The file to save the report to. ||
 </td></tr></table>
 
 *<code language="cobol">FULLTEST, Folder, ReportFile, ImageFilter</code>*
@@ -644,9 +690,9 @@ Perform a full test (completely solving a CAPTCHA) and give the actual percentag
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Folder}}} || The folder that contains a collection of sample CAPTCHA images for testing. The CAPTCHA images need to labeled (named) with the correct solution to CAPTCHA so that there is something to compare the predicted output to and get a percentage correct. ||
-|| {{{ReportFile}}} || The file to save the report to. ||
-|| {{{ImageFilter}}} || The filter (e.g., *.bmp) to use to find images. ||
+|| {{{Folder}}} || Quoted String || The folder that contains a collection of sample CAPTCHA images for testing. The CAPTCHA images need to labeled (named) with the correct solution to CAPTCHA so that there is something to compare the predicted output to and get a percentage correct. ||
+|| {{{ReportFile}}} || Quoted String || The file to save the report to. ||
+|| {{{ImageFilter}}} || Quoted String || The filter (e.g., *.bmp) to use to find images. ||
 </td></tr></table>
 
 ----
@@ -665,7 +711,7 @@ Load a pattern database. The database you load needs to have been saved under th
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Location}}} || The name of the pattern database file to load. ||
+|| {{{Location}}} || Quoted String || The name of the pattern database file to load. ||
 </td></tr></table>
 
 ----
@@ -684,7 +730,7 @@ Save the DataBase of trained patterns to a file so that it can be loaded later. 
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Location}}} || The file name to save the pattern database to. ||
+|| {{{Location}}} || Quoted String || The file name to save the pattern database to. ||
 </td></tr></table>
 
 ----
@@ -697,7 +743,7 @@ Print out a line of debug text to the console.
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Text}}} || The text to print. ||
+|| {{{Text}}} || Quoted String || The text to print. ||
 </td></tr></table>
 
 ----
@@ -710,7 +756,7 @@ Solve a given image using the logic developed and trained for in the CBL script 
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{ImageLocation}}} || The image file to load and solve. ||
+|| {{{ImageLocation}}} || Quoted String || The image file to load and solve. ||
 </td></tr></table>
 
 *<code language="cobol">SOLVE, %IMAGE%</code>*
@@ -720,7 +766,7 @@ Solve a given image using the logic developed and trained for in the CBL script 
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| _{{{%IMAGE%}}}_ || *Literal Value* - This placeholder will be replaced with the first command line value when run from the command line or, if being run from the CBL-GUI script runner app, will be replaced with the image that was dragged and dropped or loaded by the GUI. ||
+|| _{{{%IMAGE%}}}_ || _Literal Value_ || This placeholder will be replaced with the first command line value when run from the command line or, if being run from the CBL-GUI script runner app, will be replaced with the image that was dragged and dropped or loaded by the GUI. ||
 </td></tr></table>
 
 ----
@@ -733,7 +779,7 @@ Test the solver's ability to produce correct predictions on the patterns acquire
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Folder}}} || The folder that contains the set of labeled patterns to test on. (Use patterns that were not used in training or you will get skewed results.) ||
+|| {{{Folder}}} || Quoted String || The folder that contains the set of labeled patterns to test on. (Use patterns that were not used in training or you will get skewed results.) ||
 </td></tr></table>
 
 ----
@@ -746,8 +792,8 @@ Test the preprocessing and segmentation setup on a test image and save the segme
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{ImageLocation}}} || The location of the image to test the segmentation on. ||
-|| {{{OutputFolder}}} || The folder to output the segmented test symbols to. ||
+|| {{{ImageLocation}}} || Quoted String || The location of the image to test the segmentation on. ||
+|| {{{OutputFolder}}} || Quoted String || The folder to output the segmented test symbols to. ||
 </td></tr></table>
 
 ----
@@ -760,7 +806,7 @@ Train the solver on the patterns acquired or loaded.
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Folder}}} || The folder that contains the generated testing set of labeled patterns. ||
+|| {{{Folder}}} || Quoted String || The folder that contains the generated testing set of labeled patterns. ||
 </td></tr></table>
 
 *<code language="cobol">TRAIN, Folder, Iterations</code>*
@@ -770,8 +816,8 @@ Train the solver on the patterns acquired or loaded.
 
 <tr><td colspan="2">*Parameters*</td></tr>
 <tr><td><pre>   </pre></td><td>
-|| {{{Folder}}} || The folder that contains the generated testing set of labeled patterns. ||
-|| {{{Iterations}}} || Complete this many iterations of training on the given training set. ||
+|| {{{Folder}}} || Quoted String || The folder that contains the generated testing set of labeled patterns. ||
+|| {{{Iterations}}} || Whole Number || Complete this many iterations of training on the given training set. ||
 </td></tr></table>
 
 ----
@@ -785,4 +831,4 @@ Wait for the user to press a key.
 
 
 ----
-Generated by SKOTDOC on Friday, June 22, 2012 at 7:47:21 PM
+Generated by SKOTDOC on Friday, July 06, 2012 at 7:36:55 PM

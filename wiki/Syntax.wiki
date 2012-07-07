@@ -5,7 +5,7 @@ Here is the basic documentation for each CBL (CAPTCHA Breaking Language) command
 
 The plan is to have a programming guide complete with examples and a program structure guide in the near future, but that is dependent on outside forces at the moment. 
 
-[DEFINEPRECONDITIONS]
+[DEFINEPRECONDITIONS DEFINEPRECONDITIONS]
 
 <wiki:toc max_depth="2" />
 

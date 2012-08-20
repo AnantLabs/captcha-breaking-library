@@ -9,14 +9,12 @@ Here is how you write the famous "Hello World" program in CBL (save it as "sampl
 
 <code>
 * Hello World in CBL
-Say, "Hello World!"
-</code>
+Say, "Hello World!"</code>
 
 Which, when run (see below), produces this output:
 
 <code>
-Hello World!
-</code>
+Hello World!</code>
 
 ==Running the Code from the Command Line==
 
@@ -24,15 +22,13 @@ To run the above code file (assuming you saved it as "sample.captcha"), type thi
 folder that contains the cbli.exe interpreter (wherever you extracted the CBL Command Line tool to):
 
 <code>
->cbli -s sample.captcha
-</code>
+>cbli -s sample.captcha</code>
 
-This will run the script and produce output (if SetMode isn't set to diaplay nothing).
+This will run the script and produce output (if the Mode isn't set to display nothing).
 
 General usage:
 
 <code>
-CBLI [-s _script.captcha_]
-</code>
+cbli.exe [-s script.captcha]</code>
 
 _This tutorial is scheduled to be improved as I find the time to improve it._
